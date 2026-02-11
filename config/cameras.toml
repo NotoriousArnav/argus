@@ -1,0 +1,19 @@
+# Argus Camera Configuration
+# Each camera is defined under [cameras.<id>]
+
+[settings]
+detection_interval = 0.5    # seconds between face detection runs per camera
+tolerance = 0.6             # face_recognition distance threshold (lower = stricter)
+frame_scale = 0.25          # downscale factor before detection (0.25 = 4x reduction)
+screenshot_dir = "screenshots"
+log_dir = "logs"
+cooldown = 10               # seconds before re-alerting same person on same camera
+
+# Example cameras — replace with your RTSP URLs
+[cameras.cam_01]
+name = "Webcam"
+url = "rtsp://127.0.0.1:8554/live"
+
+[cameras.cam_02]
+name = "Test"
+url = "rtsp://192.168.1.17:8080/h264.sdp"

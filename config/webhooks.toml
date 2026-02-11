@@ -1,0 +1,18 @@
+# Argus Webhook Configuration
+# Each webhook is defined under [webhooks.<id>]
+# All enabled webhooks fire on every face match event.
+#
+# Available placeholders for body_template:
+#   {name}       — matched target name
+#   {camera}     — camera name
+#   {camera_id}  — camera id
+#   {confidence} — match confidence (0-1, higher = better)
+#   {timestamp}  — ISO 8601 timestamp
+#   {screenshot} — path to saved screenshot
+
+[webhooks.local]
+enabled = true
+url = "http://127.0.0.1:8000/webhook"
+method = "POST"
+headers = { "Content-Type" = "application/json" }
+body_template = '{"person": "{name}", "camera": "{camera}", "camera_id": "{camera_id}", "confidence": {confidence}, "timestamp": "{timestamp}", "screenshot": "{screenshot}"}'
