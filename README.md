@@ -90,10 +90,22 @@ Pair it with Shodan, search engine scrapers, and masscan to discover thousands o
 - **Python 3.12+**
 - System dependencies for `dlib` / `face_recognition`:
   ```bash
-  # Debian/Ubuntu
+  # Debian/Ubuntu (apt)
   sudo apt install cmake libboost-all-dev libdlib-dev
 
-  # macOS
+  # Fedora / RHEL / Rocky / Alma (dnf)
+  sudo dnf install cmake boost-devel dlib-devel
+
+  # Arch / Manjaro (pacman)
+  sudo pacman -S cmake boost dlib
+
+  # Void (xbps)
+  sudo xbps-install cmake boost-devel dlib-devel
+
+  # Gentoo (emerge)
+  sudo emerge --ask dev-libs/boost dev-libs/dlib dev-util/cmake
+
+  # macOS (Homebrew)
   brew install cmake boost dlib
   ```
 

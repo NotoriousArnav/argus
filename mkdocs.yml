@@ -1,9 +1,9 @@
 site_name: Argus
 site_description: Multi-camera RTSP surveillance with real-time face recognition
-site_author: Arnav Ghosh
+site_author: Team Argus
 repo_url: https://github.com/NotoriousArnav/argus
 repo_name: NotoriousArnav/argus
-copyright: "© 2026 Arnav Ghosh & contributors — GPL-3.0"
+copyright: "Team Argus — Licensed under GPL-3.0"
 
 theme:
   name: material

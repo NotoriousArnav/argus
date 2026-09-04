@@ -19,8 +19,20 @@ description: Installation, configuration, first run, and verification
 **System dependencies** for `dlib` and `face_recognition`. These are C++ libraries — they need a compiler and Boost:
 
 ```bash
-# Debian / Ubuntu
+# Debian / Ubuntu (apt)
 sudo apt install cmake libboost-all-dev libdlib-dev
+
+# Fedora / RHEL / Rocky / Alma (dnf)
+sudo dnf install cmake boost-devel dlib-devel
+
+# Arch / Manjaro (pacman)
+sudo pacman -S cmake boost dlib
+
+# Void (xbps)
+sudo xbps-install cmake boost-devel dlib-devel
+
+# Gentoo (emerge)
+sudo emerge --ask dev-libs/boost dev-libs/dlib dev-util/cmake
 
 # macOS (Homebrew)
 brew install cmake boost dlib
@@ -266,7 +278,7 @@ A green bounding box screenshot is saved to `screenshots/`, and the webhook fire
 
 | Problem | Solution |
 |---|---|
-| `dlib` fails to install | Make sure `cmake` and `libboost-all-dev` are installed. On Debian: `sudo apt install cmake libboost-all-dev`. |
+| `dlib` fails to install | Make sure `cmake` and Boost are installed (see [Prerequisites](#prerequisites)). On Debian: `sudo apt install cmake libboost-all-dev libdlib-dev`. On Fedora: `sudo dnf install cmake boost-devel dlib-devel`. On Arch: `sudo pacman -S cmake boost dlib`. |
 | No faces detected in target images | Use higher-resolution, well-lit photos with a single clear face. |
 | Camera won't connect | Verify the RTSP URL with `ffplay <url>`. Check credentials, port, and firewall rules. |
 | High CPU usage | Increase `frame_scale` (e.g., `0.15`) or `detection_interval` (e.g., `1.0`). |

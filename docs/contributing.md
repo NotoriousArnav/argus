@@ -111,6 +111,18 @@ No exceptions. Parameter types and return types. Always.
 # Debian/Ubuntu
 sudo apt install cmake libboost-all-dev libdlib-dev
 
+# Fedora/RHEL
+sudo dnf install cmake boost-devel dlib-devel
+
+# Arch/Manjaro
+sudo pacman -S cmake boost dlib
+
+# Void
+sudo xbps-install cmake boost-devel dlib-devel
+
+# Gentoo
+sudo emerge --ask dev-libs/boost dev-libs/dlib dev-util/cmake
+
 # macOS
 brew install cmake boost dlib
 ```
