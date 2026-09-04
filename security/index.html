@@ -1,0 +1,1999 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Camera hardening, deployment security, GPL-3.0 rationale, and privacy">
+      
+      
+        <meta name="author" content="Team Argus">
+      
+      
+      
+        <link rel="prev" href="../deployment/">
+      
+      
+        <link rel="next" href="../contributing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Security Considerations - Argus</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#security-considerations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Argus" class="md-header__button md-logo" aria-label="Argus" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Argus
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Security Considerations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/NotoriousArnav/argus" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    NotoriousArnav/argus
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Argus" class="md-nav__button md-logo" aria-label="Argus" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+
+    </a>
+    Argus
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/NotoriousArnav/argus" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    NotoriousArnav/argus
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../webhooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Webhooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../targets-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Targets Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config Loading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/alert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alert
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manager
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/display/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Display
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#securing-your-rtsp-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Securing Your RTSP Cameras
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Securing Your RTSP Cameras">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#change-default-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change default credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disable-upnp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable UPnP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-rtsp-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall RTSP ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-vpn-for-remote-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use VPN for remote access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-your-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit your network
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securing-your-argus-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Securing Your Argus Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Securing Your Argus Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-as-non-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run as non-root
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrict file permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-urls-contain-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera URLs contain credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhook-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook security
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Security">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isolate-rtsp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Isolate RTSP traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-the-argus-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall the Argus server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#face-data-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Face Data Privacy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Face Data Privacy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#biometric-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biometric data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gdpr-and-privacy-laws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GDPR and privacy laws
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screenshot-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screenshot retention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ethical-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ethical Use
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-gpl-30-and-not-mit-or-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why GPL-3.0 and Not MIT or Apache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why GPL-3.0 and Not MIT or Apache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-permissive-licenses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem with permissive licenses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-gpl-30-actually-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What GPL-3.0 actually does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-gpl-30-protects-shadow-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How GPL-3.0 protects "shadow-users"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-lgpl-or-agpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not LGPL or AGPL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-philosophical-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The philosophical statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#securing-your-rtsp-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Securing Your RTSP Cameras
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Securing Your RTSP Cameras">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#change-default-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change default credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disable-upnp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable UPnP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-rtsp-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall RTSP ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-vpn-for-remote-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use VPN for remote access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-your-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit your network
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securing-your-argus-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Securing Your Argus Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Securing Your Argus Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-as-non-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run as non-root
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrict file permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-urls-contain-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera URLs contain credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhook-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook security
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Security">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isolate-rtsp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Isolate RTSP traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-the-argus-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall the Argus server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#face-data-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Face Data Privacy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Face Data Privacy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#biometric-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biometric data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gdpr-and-privacy-laws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GDPR and privacy laws
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#screenshot-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screenshot retention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ethical-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ethical Use
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-gpl-30-and-not-mit-or-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why GPL-3.0 and Not MIT or Apache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why GPL-3.0 and Not MIT or Apache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-permissive-licenses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem with permissive licenses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-gpl-30-actually-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What GPL-3.0 actually does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-gpl-30-protects-shadow-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How GPL-3.0 protects "shadow-users"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-lgpl-or-agpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not LGPL or AGPL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-philosophical-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The philosophical statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h1>
+<p>Argus exists to demonstrate a real threat: RTSP cameras left exposed on the open internet can be watched by anyone. This document covers how to secure both your cameras and your Argus deployment.</p>
+<hr />
+<h2 id="securing-your-rtsp-cameras">Securing Your RTSP Cameras<a class="headerlink" href="#securing-your-rtsp-cameras" title="Permanent link">&para;</a></h2>
+<p>If you operate RTSP cameras, this is the section that matters most. These are not suggestions — they are the minimum required to avoid being the next data point in a Shodan search.</p>
+<h3 id="change-default-credentials">Change default credentials<a class="headerlink" href="#change-default-credentials" title="Permanent link">&para;</a></h3>
+<p><code>admin:admin</code> is not a password. It is a standing invitation. Most RTSP cameras ship with well-known defaults that are trivially guessable. Change them before the camera touches any network.</p>
+<h3 id="disable-upnp">Disable UPnP<a class="headerlink" href="#disable-upnp" title="Permanent link">&para;</a></h3>
+<p>UPnP punches holes in your firewall without asking. It broadcasts camera availability to your entire network and, depending on your router, to the internet. Disable it on both the camera and the router.</p>
+<h3 id="firewall-rtsp-ports">Firewall RTSP ports<a class="headerlink" href="#firewall-rtsp-ports" title="Permanent link">&para;</a></h3>
+<p>Block inbound access to RTSP ports from the internet:</p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>554</td>
+<td>TCP</td>
+<td>Block inbound</td>
+</tr>
+<tr>
+<td>8554</td>
+<td>TCP</td>
+<td>Block inbound</td>
+</tr>
+<tr>
+<td>Any custom RTSP port</td>
+<td>TCP</td>
+<td>Block inbound</td>
+</tr>
+</tbody>
+</table>
+<p>Use a stateful firewall. Only allow RTSP traffic from known management IPs on a VPN.</p>
+<h3 id="use-vpn-for-remote-access">Use VPN for remote access<a class="headerlink" href="#use-vpn-for-remote-access" title="Permanent link">&para;</a></h3>
+<p>Never expose RTSP streams directly to the internet. Use a VPN (WireGuard, OpenVPN) for remote camera access. If you must have external access, put it behind a reverse proxy with TLS and authentication.</p>
+<h3 id="audit-your-network">Audit your network<a class="headerlink" href="#audit-your-network" title="Permanent link">&para;</a></h3>
+<p>Run a port scanner against your own infrastructure. Tools like masscan and nmap will show you what's exposed — before someone else does.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Scan your public IP for RTSP</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>masscan<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-p554,8554<span class="w"> </span>--rate<span class="o">=</span><span class="m">1000</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or scan a specific target</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nmap<span class="w"> </span>-sV<span class="w"> </span>-p554,8554<span class="w"> </span>&lt;target-ip&gt;
+</span></code></pre></div>
+<hr />
+<h2 id="securing-your-argus-deployment">Securing Your Argus Deployment<a class="headerlink" href="#securing-your-argus-deployment" title="Permanent link">&para;</a></h2>
+<h3 id="run-as-non-root">Run as non-root<a class="headerlink" href="#run-as-non-root" title="Permanent link">&para;</a></h3>
+<p>Never run Argus as root. The systemd service file creates a dedicated <code>argus</code> user with minimal privileges. If running manually:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>argus
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>argus<span class="w"> </span>python<span class="w"> </span>main.py
+</span></code></pre></div>
+<h3 id="restrict-file-permissions">Restrict file permissions<a class="headerlink" href="#restrict-file-permissions" title="Permanent link">&para;</a></h3>
+<p>Argus stores sensitive data in four directories. Lock them down.</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Contains</th>
+<th>Recommended Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config/</code></td>
+<td>Camera URLs with credentials (<code>rtsp://user:pass@host/...</code>)</td>
+<td><code>700</code> — owner read/write only</td>
+</tr>
+<tr>
+<td><code>targets/</code></td>
+<td>Face reference images (biometric data)</td>
+<td><code>700</code> — owner read/write only</td>
+</tr>
+<tr>
+<td><code>screenshots/</code></td>
+<td>Surveillance footage with bounding boxes</td>
+<td><code>750</code> — owner full, group read</td>
+</tr>
+<tr>
+<td><code>logs/</code></td>
+<td>Detection events with timestamps and identities</td>
+<td><code>750</code> — owner full, group read</td>
+</tr>
+</tbody>
+</table>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>config/<span class="w"> </span>targets/
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>screenshots/<span class="w"> </span>logs/
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>chown<span class="w"> </span>-R<span class="w"> </span>argus:argus<span class="w"> </span>config/<span class="w"> </span>targets/<span class="w"> </span>screenshots/<span class="w"> </span>logs/
+</span></code></pre></div>
+<h3 id="camera-urls-contain-credentials">Camera URLs contain credentials<a class="headerlink" href="#camera-urls-contain-credentials" title="Permanent link">&para;</a></h3>
+<p>This is easy to overlook. Your <code>cameras.toml</code> likely contains:</p>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"rtsp://admin:s3cret_p4ssw0rd@192.168.1.100:554/stream"</span>
+</span></code></pre></div>
+<p>That file is plaintext. Anyone with read access to the config directory has your camera passwords. Treat <code>config/</code> like you would treat an SSH private key.</p>
+<p><strong>Not yet supported:</strong> Environment variable interpolation in TOML values. The current implementation reads URLs as raw strings. If this is a concern, consider using a secrets manager and templating <code>cameras.toml</code> at deploy time.</p>
+<h3 id="webhook-security">Webhook security<a class="headerlink" href="#webhook-security" title="Permanent link">&para;</a></h3>
+<p>Webhooks have known limitations in the current implementation:</p>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TLS certificate verification</td>
+<td><strong>Not verified</strong> — httpx default allows self-signed certs</td>
+</tr>
+<tr>
+<td>Authentication tokens</td>
+<td><strong>Not built-in</strong> — must be added via <code>headers</code> in <code>webhooks.toml</code></td>
+</tr>
+<tr>
+<td>Request signing</td>
+<td><strong>Not supported</strong></td>
+</tr>
+<tr>
+<td>Rate limiting</td>
+<td><strong>Not implemented</strong> on the receiver side</td>
+</tr>
+</tbody>
+</table>
+<p>If your webhook receiver is on the local network, this is acceptable. If it's remote, add authentication via headers and use TLS.</p>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">[webhooks.secure_server]</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://receiver.example.com/webhook"</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"POST"</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"Authorization"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"Bearer YOUR_TOKEN_HERE"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">body_template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'{"person": "{name}", "camera": "{camera}"}'</span>
+</span></code></pre></div>
+<hr />
+<h2 id="network-security">Network Security<a class="headerlink" href="#network-security" title="Permanent link">&para;</a></h2>
+<h3 id="isolate-rtsp-traffic">Isolate RTSP traffic<a class="headerlink" href="#isolate-rtsp-traffic" title="Permanent link">&para;</a></h3>
+<p>RTSP streams should be on a <strong>dedicated VLAN</strong> separate from your management and production networks. Camera traffic is unencrypted — anyone on the same VLAN can capture it.</p>
+<h3 id="firewall-the-argus-server">Firewall the Argus server<a class="headerlink" href="#firewall-the-argus-server" title="Permanent link">&para;</a></h3>
+<p>Argus makes <strong>outbound</strong> connections only (RTSP to cameras, HTTP to webhooks). It should never receive inbound connections from the public internet.</p>
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Port</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Outbound TCP</td>
+<td>554, 8554 (RTSP)</td>
+<td>Allow to camera VLAN only</td>
+</tr>
+<tr>
+<td>Outbound TCP</td>
+<td>80, 443 (webhooks)</td>
+<td>Allow to webhook endpoints only</td>
+</tr>
+<tr>
+<td>Inbound (any)</td>
+<td>Any</td>
+<td><strong>Deny all</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="remote-management">Remote management<a class="headerlink" href="#remote-management" title="Permanent link">&para;</a></h3>
+<p>Use SSH with key-based auth. If you need a web interface for management, put it behind a VPN. Never expose Argus management to the internet.</p>
+<hr />
+<h2 id="face-data-privacy">Face Data Privacy<a class="headerlink" href="#face-data-privacy" title="Permanent link">&para;</a></h2>
+<h3 id="biometric-data">Biometric data<a class="headerlink" href="#biometric-data" title="Permanent link">&para;</a></h3>
+<p>Target reference images are biometric data. They are 128-dimensional face encodings — mathematical representations of facial geometry. In many jurisdictions, biometric data is subject to strict regulations.</p>
+<h3 id="gdpr-and-privacy-laws">GDPR and privacy laws<a class="headerlink" href="#gdpr-and-privacy-laws" title="Permanent link">&para;</a></h3>
+<p>If you are deploying Argus in the EU, UK, or other jurisdictions with biometric data regulations:</p>
+<ul>
+<li><strong>Legal basis required</strong> — You need a lawful reason to collect and process biometric data. Surveillance without consent may require a legitimate interest assessment or explicit authorization.</li>
+<li><strong>Data protection impact assessment</strong> — May be required for systematic surveillance.</li>
+<li><strong>Right to erasure</strong> — Subjects may request deletion of their face data.</li>
+<li><strong>Data minimization</strong> — Only collect what you need. Don't add entire populations to the target database.</li>
+</ul>
+<p>Consult a lawyer. The authors are not one.</p>
+<h3 id="screenshot-retention">Screenshot retention<a class="headerlink" href="#screenshot-retention" title="Permanent link">&para;</a></h3>
+<p>Screenshots contain identifiable individuals with bounding boxes and names. They are surveillance evidence. Set a retention policy and enforce it:</p>
+<ul>
+<li>Configure the cooldown to reduce screenshot volume</li>
+<li>Implement automated cleanup (cron job or application-level TTL)</li>
+<li>Consider whether screenshots need encryption at rest</li>
+</ul>
+<hr />
+<h2 id="ethical-use">Ethical Use<a class="headerlink" href="#ethical-use" title="Permanent link">&para;</a></h2>
+<p>This is a <strong>security research and awareness tool</strong>. That is its purpose, stated clearly in the README and reinforced by the GPL-3.0 license.</p>
+<p>The uncomfortable truth: tens of thousands of RTSP cameras are exposed on the public internet right now — default credentials, no authentication, no encryption. If your camera is accessible, someone could already be doing exactly what Argus does. The only difference is you wouldn't know about it.</p>
+<p><strong>This project exists to make that threat tangible.</strong></p>
+<ul>
+<li>The authors assume no responsibility for misuse.</li>
+<li>Users are responsible for ensuring compliance with all applicable laws.</li>
+<li>Use Argus to audit your own infrastructure, secure your own cameras, and understand the real-world threat landscape.</li>
+</ul>
+<p>If you are using Argus to monitor cameras you do not own or operate, without authorization, that is on you. Not on the tool.</p>
+<hr />
+<h2 id="why-gpl-30-and-not-mit-or-apache">Why GPL-3.0 and Not MIT or Apache<a class="headerlink" href="#why-gpl-30-and-not-mit-or-apache" title="Permanent link">&para;</a></h2>
+<p>This was a deliberate choice. Not a default.</p>
+<h3 id="the-problem-with-permissive-licenses">The problem with permissive licenses<a class="headerlink" href="#the-problem-with-permissive-licenses" title="Permanent link">&para;</a></h3>
+<p>MIT and Apache 2.0 let anyone do anything with your code — including taking it, closing the source, and selling it as a proprietary surveillance product. For most software, that's fine. For a tool that demonstrates mass surveillance capabilities, it's dangerous.</p>
+<p>If Argus were MIT-licensed, someone could:
+1. Fork it
+2. Remove the security disclaimer
+3. Remove the ethical use warnings
+4. Add a polished UI
+5. Sell it as a "loss prevention" or "personnel monitoring" tool
+6. Never acknowledge the original project or its security research purpose</p>
+<p>The code would be identical. The intent would be erased. The people being watched would never know the tool they're subjected to was built to demonstrate <em>why they should be protected</em>.</p>
+<h3 id="what-gpl-30-actually-does">What GPL-3.0 actually does<a class="headerlink" href="#what-gpl-30-actually-does" title="Permanent link">&para;</a></h3>
+<p>The GNU General Public License v3.0 is a <strong>copyleft</strong> license. It guarantees four things that matter for a project like this:</p>
+<table>
+<thead>
+<tr>
+<th>Protection</th>
+<th>What It Means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Source availability</strong></td>
+<td>Anyone who distributes Argus or a derivative work <em>must</em> provide the source code. No black boxes. No hidden modifications.</td>
+</tr>
+<tr>
+<td><strong>Same-license propagation</strong></td>
+<td>Derivative works must also be GPL-3.0. You can't take Argus, modify it, and release it under a proprietary license. The copyleft chain is unbroken.</td>
+</tr>
+<tr>
+<td><strong>Patent protection</strong></td>
+<td>Contributors grant explicit patent rights. If someone contributes code covered by a patent, they can't later sue users for patent infringement. Apache 2.0 also has this; MIT does not.</td>
+</tr>
+<tr>
+<td><strong>Anti-tivoization</strong></td>
+<td>If Argus is deployed on hardware that uses locked-down firmware (like many IoT devices), GPL-3.0 requires that users can still modify and run the software. This prevents hardware manufacturers from using Argus in locked surveillance appliances that owners can't audit.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-gpl-30-protects-shadow-users">How GPL-3.0 protects "shadow-users"<a class="headerlink" href="#how-gpl-30-protects-shadow-users" title="Permanent link">&para;</a></h3>
+<p>The people being watched by Argus — the faces in the frame, the targets in the database, the individuals captured on RTSP streams — never consented to surveillance. They are shadow-users: people affected by the software who never installed it, never saw a license, and never had a choice.</p>
+<p>GPL-3.0 protects them indirectly:</p>
+<ol>
+<li>
+<p><strong>Transparency through source access.</strong> Anyone — researchers, journalists, regulators, the targets themselves — can examine exactly what Argus does. How faces are matched. What data is logged. Where screenshots are sent. There is no proprietary black box that hides surveillance behavior.</p>
+</li>
+<li>
+<p><strong>The security research mandate.</strong> Because derivative works must carry the same license, any fork of Argus must also be open source. This means the security research purpose propagates. A company can't fork Argus, strip the README disclaimer, and sell it without revealing exactly what the tool does.</p>
+</li>
+<li>
+<p><strong>The countermeasure guarantee.</strong> GPL-3.0 ensures that improvements and countermeasures remain open. If someone builds a detection-evasion technique or an anti-surveillance countermeasure on top of Argus, that improvement must also be open source. The arms race stays visible.</p>
+</li>
+<li>
+<p><strong>Audit trail.</strong> The license requires that the software can be studied. Targets, regulators, and civil liberties organizations can legally obtain, examine, and understand the tool being used against them. You can't study a proprietary black box. You can study a GPL-3.0 project.</p>
+</li>
+</ol>
+<h3 id="why-not-lgpl-or-agpl">Why not LGPL or AGPL<a class="headerlink" href="#why-not-lgpl-or-agpl" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>LGPL</strong> would allow proprietary linking — a closed-source application could use Argus as a library without open-sourcing the application. Too permissive for this use case.</li>
+<li><strong>AGPL</strong> would add network interaction provisions (SaaS must provide source), but Argus is a local deployment tool, not a SaaS platform. GPL-3.0 already covers the deployment scenarios that matter.</li>
+</ul>
+<h3 id="the-philosophical-statement">The philosophical statement<a class="headerlink" href="#the-philosophical-statement" title="Permanent link">&para;</a></h3>
+<p>GPL-3.0 is a political choice as much as a legal one. It says: <em>this tool belongs to everyone, and no one can make it belong to only themselves.</em> For a project that demonstrates a surveillance threat, that's the only license that makes sense.</p>
+<p>The README says it plainly: <strong>"This project is open-sourced under the GNU General Public License v3.0 so that people can study it, understand the threat, and develop countermeasures."</strong></p>
+<p>That sentence is enforceable because of GPL-3.0. Under MIT, it would be a suggestion.</p>
+<hr />
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
+<p>Before deploying Argus in production, verify:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All target cameras have changed default credentials</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> UPnP is disabled on cameras and routers</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> RTSP ports are firewalled from the internet</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Argus runs as a non-root user</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>config/</code> directory permissions are <code>700</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>targets/</code> directory permissions are <code>700</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>screenshots/</code> and <code>logs/</code> have restricted permissions</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Camera URLs do not contain plaintext credentials in shared configs</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Argus server is firewalled from public internet (inbound denied)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> RTSP traffic is on an isolated VLAN</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Webhook endpoints use TLS and authentication</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Screenshot retention policy is in place</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> You have legal authority for the surveillance you are conducting</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Team Argus — Licensed under GPL-3.0
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/NotoriousArnav" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.indexes", "navigation.top", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
