@@ -28,7 +28,7 @@ def __init__(
     self,
     settings: Settings,
     cameras: list[CameraConfig],
-    detector: FaceDetector,
+    detector: Backend,
     alert_handler: AlertHandler,
     display: Display | None = None,
 ) -> None:
@@ -38,7 +38,7 @@ def __init__(
 |-----------|------|---------|
 | `_settings` | `Settings` | Global configuration |
 | `_cameras` | `list[CameraConfig]` | Camera list |
-| `_detector` | `FaceDetector` | Face detection engine |
+| `_detector` | `Backend` | Face detection backend (resolved from config) |
 | `_alert_handler` | `AlertHandler` | Match event processor |
 | `_display` | `Display \| None` | GUI (None in headless mode) |
 | `_streams` | `dict[str, RTSPStream]` | Camera ID → stream thread |
@@ -177,7 +177,7 @@ main.py creates:          StreamManager owns:
 ─────────────             ──────────────────
 Settings                  _settings (reference)
 list[CameraConfig]        _cameras (reference)
-FaceDetector              _detector (reference)
+Backend                   _detector (reference)
 AlertHandler              _alert_handler (reference)
 Display | None            _display (reference)
                           _streams (dict, created in start())

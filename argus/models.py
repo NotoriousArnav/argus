@@ -27,6 +27,12 @@ class Settings:
     screenshot_dir: str = "screenshots"
     log_dir: str = "logs"
     cooldown: int = 10
+    model_backend: str = "dlib_hog"
+    use_gpu: bool = False
+
+    _VALID_BACKENDS = frozenset(
+        {"dlib_hog", "dlib_cnn", "insightface", "facenet"}
+    )
 
     def __post_init__(self) -> None:
         if not 0.0 < self.frame_scale <= 1.0:
@@ -36,6 +42,11 @@ class Settings:
         if self.detection_interval <= 0:
             raise ValueError(
                 f"detection_interval must be > 0, got {self.detection_interval}"
+            )
+        if self.model_backend not in self._VALID_BACKENDS:
+            raise ValueError(
+                f"model_backend must be one of {sorted(self._VALID_BACKENDS)}, "
+                f"got {self.model_backend}"
             )
 
 

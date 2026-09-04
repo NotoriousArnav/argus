@@ -1,11 +1,15 @@
-"""Target loading — scan targets/ directory and pre-compute face encodings."""
+"""Target loading — scan targets/ directory and pre-compute face encodings.
+
+Target encodings MUST be computed with the same backend used for live
+detection — mixing backends (e.g. dlib HOG gallery + InsightFace live) will
+silently break matching, because each model produces incomparable embeddings.
+"""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-import face_recognition
 import numpy as np
 from loguru import logger
 
@@ -14,8 +18,11 @@ from argus.models import Target
 DEFAULT_TARGETS_DIR = Path("targets")
 
 
-def load_targets(targets_dir: Path = DEFAULT_TARGETS_DIR) -> list[Target]:
-    """Scan targets directory, load info.json for each, and compute face encodings.
+def load_targets(
+    targets_dir: Path = DEFAULT_TARGETS_DIR,
+    backend=None,
+) -> list[Target]:
+    """Scan targets directory, load info.json for each, and compute encodings.
 
     Directory structure expected:
         targets/
@@ -26,9 +33,11 @@ def load_targets(targets_dir: Path = DEFAULT_TARGETS_DIR) -> list[Target]:
 
     Args:
         targets_dir: Path to the targets root directory.
+        backend: The active :class:`Backend` used to compute encodings. Must
+            be the same backend used for live detection.
 
     Returns:
-        List of Target objects with pre-computed 128-D face encodings.
+        List of Target objects with pre-computed embeddings.
     """
     if not targets_dir.exists():
         logger.warning(
@@ -47,7 +56,7 @@ def load_targets(targets_dir: Path = DEFAULT_TARGETS_DIR) -> list[Target]:
             logger.warning("No info.json in {} — skipping", target_path)
             continue
 
-        target = _load_single_target(target_path, info_path)
+        target = _load_single_target(target_path, info_path, backend)
         if target is not None:
             targets.append(target)
 
@@ -59,12 +68,15 @@ def load_targets(targets_dir: Path = DEFAULT_TARGETS_DIR) -> list[Target]:
     return targets
 
 
-def _load_single_target(target_path: Path, info_path: Path) -> Target | None:
+def _load_single_target(
+    target_path: Path, info_path: Path, backend
+) -> Target | None:
     """Load a single target from its directory.
 
     Args:
         target_path: Path to the target's directory.
         info_path: Path to the target's info.json.
+        backend: The active backend for computing encodings.
 
     Returns:
         A Target with encodings, or None if no valid encodings found.
@@ -91,7 +103,7 @@ def _load_single_target(target_path: Path, info_path: Path) -> Target | None:
             logger.warning("Image not found for target '{}': {}", name, img_path)
             continue
 
-        encoding = _compute_encoding(img_path, name)
+        encoding = _compute_encoding(img_path, name, backend)
         if encoding is not None:
             encodings.append(encoding)
 
@@ -103,23 +115,24 @@ def _load_single_target(target_path: Path, info_path: Path) -> Target | None:
     return Target(name=name, encodings=encodings)
 
 
-def _compute_encoding(img_path: Path, target_name: str) -> np.ndarray | None:
-    """Compute a 128-D face encoding from an image file.
+def _compute_encoding(img_path: Path, target_name: str, backend) -> np.ndarray | None:
+    """Compute an embedding from an image file using the active backend.
 
     Args:
         img_path: Path to the image file.
         target_name: Name of the target (for logging).
+        backend: The active backend used for encoding.
 
     Returns:
-        128-D numpy array, or None if no face detected.
+        Embedding vector, or None if no face detected.
     """
     try:
-        image = face_recognition.load_image_file(str(img_path))
+        image = backend.ndarray_from_file(str(img_path))
     except Exception as e:
         logger.error("Failed to load image {} for '{}': {}", img_path, target_name, e)
         return None
 
-    face_encs = face_recognition.face_encodings(image, num_jitters=1)
+    face_encs = backend.encode_image(image)
 
     if not face_encs:
         logger.warning("No face detected in {} for target '{}'", img_path, target_name)

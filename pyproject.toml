@@ -14,5 +14,16 @@ dependencies = [
     "httpx>=0.27",
 ]
 
+[project.optional-dependencies]
+# Beefy-hardware backends. Base install only ships dlib_hog (works everywhere).
+gpu = [
+    "insightface",
+    "onnxruntime-gpu",
+]
+facenet = [
+    "torch",
+    "facenet-pytorch",
+]
+
 [project.scripts]
 argus = "main:main"

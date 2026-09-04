@@ -43,6 +43,8 @@ def load_cameras_config(
         screenshot_dir=raw_settings.get("screenshot_dir", "screenshots"),
         log_dir=raw_settings.get("log_dir", "logs"),
         cooldown=raw_settings.get("cooldown", 10),
+        model_backend=raw_settings.get("model_backend", "dlib_hog"),
+        use_gpu=raw_settings.get("use_gpu", False),
     )
 
     # Parse cameras

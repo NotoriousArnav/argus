@@ -160,7 +160,7 @@ The `top`/`left` values may be **smaller** than `bottom`/`right` — this is nor
 
 ### `frame` Lifecycle
 
-1. `FaceDetector.detect()` attaches `frame` (the original BGR array) to the `MatchEvent`.
+1. `Backend.detect()` attaches `frame` (the original BGR array) to the `MatchEvent`.
 2. `AlertHandler._save_screenshot()` copies it and draws the bounding box + label.
 3. The annotated copy is written to disk as JPEG.
 4. The original reference is discarded when the `MatchEvent` goes out of scope.

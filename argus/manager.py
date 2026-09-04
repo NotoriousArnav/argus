@@ -8,7 +8,7 @@ import time
 from loguru import logger
 
 from argus.alert import AlertHandler
-from argus.detection import FaceDetector
+from argus.detection_models import Backend
 from argus.display import Display
 from argus.models import CameraConfig, Settings
 from argus.stream import RTSPStream
@@ -28,7 +28,7 @@ class StreamManager:
         self,
         settings: Settings,
         cameras: list[CameraConfig],
-        detector: FaceDetector,
+        detector: Backend,
         alert_handler: AlertHandler,
         display: Display | None = None,
     ) -> None:

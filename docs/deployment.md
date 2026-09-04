@@ -219,16 +219,14 @@ find /opt/argus/screenshots -name "*.jpg" -mtime +7 -delete
 
 ### CPU
 
-Face detection is **CPU-bound**. The dlib HOG model runs on CPU only — no GPU acceleration is supported.
+Resource use is set by the **backend** you select in `settings.model_backend`:
 
-| Component | Impact |
-|---|---|
-| Frame decoding (FFmpeg/OpenCV) | Low |
-| Frame resize (`frame_scale`) | Low |
-| HOG face detection | **High** — this is the bottleneck |
-| 128-D encoding comparison | Low — vectorized numpy |
-
-Each camera shares the same detection lock (`_DETECTION_LOCK`). More cameras = more contention on that lock.
+| Backend | CPU Cost | GPU | RAM | Best For |
+|---|---|---|---|---|
+| `dlib_hog` (default) | Low–medium, runs anywhere | no | ~50–100 MB | Raspberry Pi, general surveillance |
+| `dlib_cnn` | High (~10x HOG) | advised | ~100–200 MB | small/blurred/angled faces on a workstation |
+| `insightface` | Offloaded to GPU | **yes**, CUDA (`argus[gpu]`) | +model ~500 MB | highest accuracy |
+| `facenet` | Offloaded to GPU | **yes**, CUDA (`argus[facenet]`) | +PyTorch ~1 GB | strong accuracy alternative |
 
 ### RAM
 
@@ -236,10 +234,13 @@ Each camera shares the same detection lock (`_DETECTION_LOCK`). More cameras = m
 |---|---|
 | Thread stack (per camera) | 512 KB (reduced from 8 MB default) |
 | Frame buffer (per camera) | ~2–8 MB depending on resolution |
-| Target encodings | ~512 bytes per encoding (128 floats × 4 bytes) |
+| dlib target encodings | ~512 bytes per encoding (128 floats × 4 bytes) |
+| 512-D target encodings | ~2 KB per encoding |
 | OpenCV + dlib | ~50–100 MB baseline |
+| InsightFace on GPU | +~500 MB (model + onnxruntime) |
+| PyTorch (FaceNet) | +~1 GB baseline |
 
-**Rule of thumb:** 10 cameras at 1080p ≈ 200–400 MB total RSS.
+**Rule of thumb:** 10 cameras at 1080p with `dlib_hog` ≈ 200–400 MB total RSS.
 
 ### Network
 

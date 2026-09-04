@@ -21,7 +21,8 @@ argus/
 │   ├── models.py           # Dataclasses: Settings, CameraConfig, MatchEvent, etc.
 │   ├── config.py           # TOML config loading and validation
 │   ├── stream.py           # RTSPStream — one thread per camera, auto-reconnect
-│   ├── detection.py        # FaceDetector — HOG detection + encoding + matching
+│   ├── detection.py        # Dispatcher — resolves configured Backend
+│   ├── detection_models/   # Pluggable backends: dlib_hog, dlib_cnn, insightface, facenet
 │   ├── alert.py            # AlertHandler — logging, screenshots, webhooks
 │   ├── display.py          # GUI display windows (OpenCV)
 │   ├── manager.py          # StreamManager — orchestrates the full pipeline
@@ -209,7 +210,7 @@ If your module handles a new output type (e.g., database storage, MQTT), it belo
 The `StreamManager` is the central orchestrator. Components interact with it in one of two ways:
 
 1. **Direct injection** — The manager receives components via `__init__` (detector, alert handler, display). Add constructor parameters for new components.
-2. **Event flow** — Data flows: `RTSPStream` → `FaceDetector.detect()` → `AlertHandler.handle()`. To add a new event type, intercept at the manager's main loop.
+2. **Event flow** — Data flows: `RTSPStream` → `Backend.detect()` → `AlertHandler.handle()`. To add a new event type, intercept at the manager's main loop.
 
 ### Threading considerations
 

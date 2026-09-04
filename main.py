@@ -65,7 +65,7 @@ def main() -> None:
     # before argument parsing is complete.
     from argus.alert import AlertHandler
     from argus.config import load_cameras_config, load_webhooks_config
-    from argus.detection import FaceDetector
+    from argus.detection import resolve_backend
     from argus.display import Display
     from argus.manager import StreamManager
     from argus.targets import build_encoding_index, load_targets
@@ -92,18 +92,26 @@ def main() -> None:
         "Configuration loaded: {} camera(s), {} webhook(s)", len(cameras), len(webhooks)
     )
 
-    # --- Load targets ---
+    # --- Resolve the face recognition backend ---
+    # argus.detection decides which model to use from config, validates its
+    # dependencies, and loads it. The SAME instance is used for both target
+    # encoding and live detection so embeddings are always comparable.
+    try:
+        backend = resolve_backend(settings)
+    except ValueError as e:
+        logger.error("Backend error: {}", e)
+        sys.exit(1)
+
+    # --- Load targets (encodings use the same backend as live detection) ---
     logger.info("Loading targets from {}", args.targets)
-    targets = load_targets(args.targets)
+    targets = load_targets(args.targets, backend=backend)
     all_encodings, encoding_names = build_encoding_index(targets)
+    backend.set_gallery(all_encodings, encoding_names)
 
     if not targets:
         logger.warning(
             "No targets loaded — Argus will detect faces but cannot identify anyone"
         )
-
-    # --- Initialize remaining components ---
-    detector = FaceDetector(all_encodings, encoding_names, settings)
 
     display = None
     if args.gui:
@@ -116,7 +124,7 @@ def main() -> None:
     manager = StreamManager(
         settings=settings,
         cameras=cameras,
-        detector=detector,
+        detector=backend,
         alert_handler=alert_handler,
         display=display,
     )

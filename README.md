@@ -70,8 +70,8 @@ Pair it with Shodan, search engine scrapers, and masscan to discover thousands o
             └───────────────────────────────┼───────────────────────────────┘
                                             ▼
                                  ┌──────────────────────┐
-                                 │     FaceDetector      │
-                                 │  HOG → Encode → Match │
+                                 │   Detection Backend   │
+                                 │ Detect → Encode → Match│
                                  └──────────┬───────────┘
                                             ▼
                                  ┌──────────────────────┐

@@ -63,8 +63,8 @@ It doesn't crash. It doesn't give up. And it doesn't forget a face.
             └───────────────────────────────┼───────────────────────────────┘
                                             ▼
                                  ┌──────────────────────┐
-                                 │     FaceDetector      │
-                                 │  HOG → Encode → Match │
+                                 │   Detection Backend   │
+                                 │ Detect → Encode → Match│
                                  └──────────┬───────────┘
                                             ▼
                                  ┌──────────────────────┐

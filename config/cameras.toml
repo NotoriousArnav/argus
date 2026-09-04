@@ -9,6 +9,16 @@ screenshot_dir = "screenshots"
 log_dir = "logs"
 cooldown = 10               # seconds before re-alerting same person on same camera
 
+# Face recognition backend. One of:
+#   dlib_hog        — default, lightweight, runs anywhere (original behavior)
+#   dlib_cnn        — dlib CNN detector, needs GPU/many cores, same 128-D encodings
+#   insightface     — SCRFD + ArcFace 512-D, best accuracy, needs `argus[gpu]`
+#   facenet         — MTCNN + FaceNet 512-D, needs `argus[facenet]`
+# model_backend = "dlib_hog"
+
+# Use GPU acceleration (insightface/facenet). Ignored by dlib backends.
+# use_gpu = false
+
 # Example cameras — replace with your RTSP URLs
 [cameras.cam_01]
 name = "Webcam"

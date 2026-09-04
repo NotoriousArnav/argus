@@ -40,11 +40,11 @@ Argus is built on three principles:
     │             │             │             │             │
     ▼             ▼             ▼             ▼             ▼
 ┌────────┐  ┌────────┐  ┌────────┐  ┌──────────────┐  ┌──────────┐
-│RTSP    │  │RTSP    │  │RTSP    │  │ FaceDetector │  │  Alert   │
-│Stream  │  │Stream  │  │Stream  │  │  (dlib/face_ │  │  Handler │
-│(cam_01)│  │(cam_02)│  │(cam_N) │  │  recognition)│  │          │
+│RTSP    │  │RTSP    │  │RTSP    │  │ Detection    │  │  Alert   │
+│Stream  │  │Stream  │  │Stream  │  │  dispatcher  │  │  Handler │
+│(cam_01)│  │(cam_02)│  │(cam_N) │  │  + backend   │  │          │
 │ thread │  │ thread │  │ thread │  │  main thread │  │ main +   │
-│ 512KB  │  │ 512KB  │  │ 512KB  │  │  _DETECT_LOCK│  │ daemon   │
+│ 512KB  │  │ 512KB  │  │ 512KB  │  │  _INFER_LOCK │  │ daemon   │
 └────────┘  └────────┘  └────────┘  └──────────────┘  └──────────┘
                                                       │
                                               ┌───────┴───────┐
@@ -62,7 +62,7 @@ Argus is built on three principles:
 |---|---|---|
 | Entry point | `main.py` | CLI parsing, component wiring, banner output |
 | Stream reader | `argus/stream.py` | `RTSPStream` — one daemon thread per camera, FFmpeg-backed, auto-reconnect |
-| Face detector | `argus/detection.py` | `FaceDetector` — HOG detection, 128-D encoding, vectorized distance matching |
+| Face detection | `argus/detection.py` + `argus/detection_models/` | dispatcher + pluggable backends — `dlib_hog` (default), `dlib_cnn`, `insightface`, `facenet` |
 | Alert handler | `argus/alert.py` | `AlertHandler` — cooldown enforcement, screenshot capture, webhook dispatch |
 | Stream manager | `argus/manager.py` | `StreamManager` — main processing loop, signal handling, GUI tick |
 | Display | `argus/display.py` | `Display` — optional OpenCV windows with bounding box overlays |
@@ -94,7 +94,7 @@ StreamManager._main_loop()
     ├─► stream.latest_frame()
     │       Returns frame.copy() under _lock    ← snapshot semantics
     │
-    ├─► FaceDetector.detect(frame, camera_id, camera_name)
+    ├─► detector.detect(frame, camera_id, camera_name)   # resolved Backend
     │       │
     │       ├─► cv2.resize(frame, fx=0.25, fy=0.25)
     │       │       Downscale for speed

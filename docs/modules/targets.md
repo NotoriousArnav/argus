@@ -46,8 +46,10 @@ Each subdirectory is one target. The directory name is the fallback identifier i
 ```python
 DEFAULT_TARGETS_DIR = Path("targets")
 
-def load_targets(targets_dir: Path = DEFAULT_TARGETS_DIR) -> list[Target]:
+def load_targets(targets_dir: Path = DEFAULT_TARGETS_DIR, backend: Backend | None = None) -> list[Target]:
 ```
+
+`backend` is the active face backend. It's injected so **target encodings are computed with the same model that runs live detection** — see [matching correctness](#matching-correctness) below.
 
 ### Flow
 
@@ -115,18 +117,18 @@ Catches both corrupt JSON and filesystem errors (permission denied, etc.).
 ## `_compute_encoding()`
 
 ```python
-def _compute_encoding(img_path: Path, target_name: str) -> np.ndarray | None:
+def _compute_encoding(img_path: Path, target_name: str, backend: Backend) -> np.ndarray | None:
 ```
 
 ### Pipeline
 
 ```python
-image = face_recognition.load_image_file(str(img_path))
-face_encs = face_recognition.face_encodings(image, num_jitters=1)
+image = backend.ndarray_from_file(str(img_path))   # BGR ndarray
+face_encs = backend.encode_image(image)            # matching encoder
 ```
 
-1. Load image via `face_recognition` (uses PIL under the hood).
-2. Detect faces and compute 128-D encodings.
+1. Load image as an ndarray via `backend.ndarray_from_file()` (OpenCV under the hood, cross-format).
+2. Detect faces and compute encodings with `backend.encode_image()` — the **same encoder** used at runtime.
 3. Return the first encoding, or `None` if no face found.
 
 ### `num_jitters=1`
@@ -191,7 +193,17 @@ if not targets:
     return None, []
 ```
 
-Returns `None` for the matrix and an empty list. `FaceDetector` handles this gracefully — detects faces but can't identify anyone.
+Returns `None` for the matrix and an empty list. The detector handles this gracefully — it still finds faces but can't identify anyone.
+
+---
+
+## Matching Correctness
+
+**Target encodings must be computed with the same backend that runs live detection.** This is why `backend` is threaded through `load_targets()`, `_load_single_target()`, and `_compute_encoding()`.
+
+Why it matters: a 128-D dlib euclidean encoding and a 512-D InsightFace cosine encoding live in **different vector spaces**. You can't compare them. If you build the gallery with `dlib_hog` but detect with `insightface`, every match fails or, worse, produces garbage. Argus wires the same backend through both paths automatically — `main.py` resolves the backend first, hands it to `load_targets(backend=...)`, and calls `backend.set_gallery(...)` before detection starts.
+
+Switching backends invalidates your target gallery. Re-run Argus after `pip install "argus[gpu]"` + `model_backend = "insightface"` and it recomputes the encodings on next startup.
 
 ---
 
@@ -199,13 +211,14 @@ Returns `None` for the matrix and an empty list. `FaceDetector` handles this gra
 
 ```
 Startup:
-  load_targets()           → list[Target] (each with list[np.ndarray])
-  build_encoding_index()   → (N,128) matrix + names list
+  resolve_backend(settings)      → Backend (matches config)
+  load_targets(backend=backend)  → list[Target] (each with list[np.ndarray])
+  build_encoding_index()         → (N,128) matrix + names list
+  backend.set_gallery(matrix, names)
 
 Runtime:
-  FaceDetector.detect()
-    → face_distance(matrix, detected_encoding)
-    → argmin → best_idx → names[best_idx] → MatchEvent
+  backend.detect()               → face_distance(matrix, encoding)
+                                   → argmin → best_idx → names[best_idx] → MatchEvent
 ```
 
-Encodings are computed **once** at startup and held in memory for the lifetime of the process. They're small — each is 128 float64 values = 1 KB. A hundred targets with 5 images each = 500 KB. Negligible.
+Encodings are computed **once** at startup and held in memory for the lifetime of the process. They're small — dlib's are 128 float64 values = 1 KB each; 512-D cosine backends are 4 KB each. A hundred targets with 5 images each is still under a megabyte. Negligible.

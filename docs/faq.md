@@ -36,7 +36,7 @@ Argus logs connection failures with `[camera_id] Failed to connect to 'Camera Na
 
 ## "Face detection is slow"
 
-Face detection is CPU-bound. The dlib HOG model runs on CPU with no GPU acceleration. To improve performance:
+Face detection is CPU-bound for the dlib backends. To speed up the **default** setup:
 
 1. **Increase `frame_scale`** — Default is 0.25 (4x reduction). Try 0.1 (10x reduction) for much faster detection at the cost of accuracy on small faces:
    ```toml
@@ -50,7 +50,18 @@ Face detection is CPU-bound. The dlib HOG model runs on CPU with no GPU accelera
 
 3. **Fewer targets** — Each detected face is compared against all target encodings. More targets = slower matching. Remove targets you don't actively need.
 
-4. **Hardware** — dlib HOG is single-threaded per detection call. A faster CPU directly improves detection speed. There is no GPU path in the current implementation.
+4. **Hardware** — dlib HOG is single-threaded per detection call. A faster CPU directly improves detection speed.
+
+5. **Go GPU** — If you have an NVIDIA GPU, switch to a CUDA backend and move detection off the CPU entirely:
+   ```bash
+   pip install "argus[gpu]"
+   ```
+   ```toml
+   [settings]
+   model_backend = "insightface"   # or facenet
+   use_gpu = true
+   ```
+   GPU inference is typically an order of magnitude faster and more accurate than CPU HOG.
 
 ---
 
@@ -66,7 +77,22 @@ The HOG detector finds faces under specific conditions:
   - Move the camera closer to the subject
 - **Resolution** — Low-resolution cameras (VGA, CIF) may produce faces too small to detect reliably.
 
-The HOG model is fast but less accurate than the CNN model. Currently Argus uses HOG. Switching to CNN (`model="cnn"` in `face_recognition.face_locations()`) would improve detection at the cost of significant CPU overhead — roughly 10x slower.
+Argus's accuracy is bounded by the detection backend you chose. Want stronger recognition? [Swap the backend](modules/detection.md) — this is a first-class config option now:
+
+| Backend | Accuracy | Cost |
+|---|---|---|
+| `dlib_hog` (default) | good for clear, frontal faces | CPU, runs anywhere |
+| `dlib_cnn` | better on small/blurred/angled | ~10x CPU cost, or a GPU |
+| `insightface` | best — SCRFD + ArcFace 512-D | needs `argus[gpu]` + CUDA |
+| `facenet` | strong — MTCNN + FaceNet 512-D | needs `argus[facenet]` + CUDA |
+
+```toml
+[settings]
+model_backend = "insightface"   # or facenet / dlib_cnn
+use_gpu = true                  # for the 512-D backends
+```
+
+Set `model_backend` in `cameras.toml`, install the matching extra (`pip install "argus[gpu]"`), and Argus uses the new model — no code changes. Remember to re-tune `tolerance` (cosine backends want ~0.3–0.4) and that switching backends rebuilds the target gallery on next startup.
 
 ---
 
@@ -172,9 +198,10 @@ Yes, with caveats.
 - **Increase `frame_scale`:** Use 0.1 or lower to reduce the pixel count that HOG processes.
 - **Increase `detection_interval`:** Use 1.0 or 2.0 seconds to reduce CPU load.
 - **Consider fewer cameras:** 1–2 cameras maximum on a Pi 4.
+- **Stick with `dlib_hog`.** It's the only backend that runs well on a Pi's CPU. `dlib_cnn`, `insightface`, and `facenet` all need desktop-class hardware or a CUDA GPU — Argus will refuse (with a clear error) if you select them without the installed dependencies, so you can't accidentally cripple a Pi.
 - **No GPU acceleration:** dlib's HOG model is CPU-only. The Pi's GPU is not utilized.
 
-For higher performance on ARM, consider a Jetson Nano or similar with CUDA support — though the current implementation does not have a GPU detection path.
+For higher performance on ARM, consider a Jetson Nano or similar with CUDA support — Argus's `insightface` / `facenet` backends use CUDA directly (`use_gpu = true`).
 
 ---
 

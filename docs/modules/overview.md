@@ -69,7 +69,7 @@ main.py    ──► config, targets, detection, alert, display, manager
 **Lock contention points:**
 
 - `RTSPStream._lock` — protects `_frame` between the reader thread and the main thread's `latest_frame()` call.
-- `FaceDetector._DETECTION_LOCK` — module-level, serializes all `face_recognition` calls across all threads (dlib global state).
+- `Backend._INFERENCE_LOCK` — module-level, serializes all inference calls across all threads (dlib/CUDA global state).
 - `AlertHandler._cooldown_lock` — protects the `_cooldowns` dict between the main thread and any future concurrent `handle()` calls.
 
 ---
@@ -82,10 +82,11 @@ main.py::main()
   2. load_cameras_config()    → Settings, list[CameraConfig]
   3. load_webhooks_config()   → list[WebhookConfig]
   4. AlertHandler()           → sets up loguru sinks, creates dirs
-  5. load_targets()           → list[Target]
-  6. build_encoding_index()   → (N,128) array, names list
-  7. FaceDetector()           → ready to detect
-  8. Display() [if --gui]     → creates windows
-  9. StreamManager()          → stores references
-  10. manager.start()         → spawns threads, enters main loop (blocks)
+  5. resolve_backend(settings) → Backend (matches Settings.model_backend)
+  6. load_targets(backend)    → list[Target]
+  7. build_encoding_index()   → (N,128) array, names list
+  8. backend.set_gallery()    → attach gallery to detector
+  9. Display() [if --gui]     → creates windows
+  10. StreamManager()          → stores references
+  11. manager.start()         → spawns threads, enters main loop (blocks)
 ```

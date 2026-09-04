@@ -1,113 +1,94 @@
-"""Face detection and recognition against known targets."""
+"""Face detection and recognition — dispatcher, not a class.
+
+This module is intentionally thin. It reads the configured ``model_backend``
+and ``use_gpu`` from :class:`Settings`, resolves the matching backend from
+:mod:`argus.detection_models`, attaches the target gallery, and exposes the
+ready instance as ``FaceDetector``.
+
+``FaceDetector`` is a *variable* holding whichever backend is configured —
+``dlib_hog`` (default, everywhere), ``dlib_cnn``, ``insightface``, or
+``facenet``. The rest of Argus calls ``detector.detect(...)`` identically no
+matter which model is running.
+"""
 
 from __future__ import annotations
 
-import threading
-from datetime import datetime, timezone
-
-import cv2
-import face_recognition
 import numpy as np
 from loguru import logger
 
-from argus.models import MatchEvent, Settings
+from argus.detection_models import Backend, available_backends, get_backend
+from argus.models import Settings
 
-# Module-level lock for all face_recognition calls.
-# The library uses global dlib singletons that are not thread-safe.
-_DETECTION_LOCK = threading.Lock()
+# Import backend modules so their @register decorators populate the registry.
+from argus.detection_models import dlib_based  # noqa: F401
+from argus.detection_models import insightface_model  # noqa: F401
+from argus.detection_models import facenet_model  # noqa: F401
 
 
-class FaceDetector:
-    """Detects faces in frames and matches them against known target encodings.
+def resolve_backend(settings: Settings, use_gpu: bool | None = None) -> Backend:
+    """Resolve and build the configured face recognition backend (no gallery).
 
-    All face_recognition calls are serialized behind a lock because dlib's
-    global detector/encoder objects are not thread-safe.
+    Reads ``settings.model_backend`` and ``settings.use_gpu``, validates the
+    backend and its dependencies, and loads its models. The returned backend
+    has no target gallery attached yet — callers attach it with
+    :meth:`Backend.set_gallery` after computing target encodings with the
+    same backend.
+
+    Args:
+        settings: Global settings (tolerance, frame_scale, model_backend, ...).
+        use_gpu: Override ``settings.use_gpu`` if provided.
+
+    Returns:
+        A constructed backend ready for gallery attachment + ``detect()``.
+
+    Raises:
+        ValueError: If the configured backend is unknown or its dependencies
+            are not installed.
     """
+    gpu = settings.use_gpu if use_gpu is None else bool(use_gpu)
+    name = settings.model_backend
 
-    def __init__(
-        self,
-        all_encodings: np.ndarray | None,
-        encoding_names: list[str],
-        settings: Settings,
-    ) -> None:
-        """Initialize the detector.
+    logger.debug(
+        "Resolving face backend '{}' (gpu={}) — available: {}",
+        name,
+        gpu,
+        available_backends(),
+    )
 
-        Args:
-            all_encodings: (N, 128) array of all target face encodings, or None.
-            encoding_names: List of target names, one per encoding row.
-            settings: Global settings (tolerance, frame_scale).
-        """
-        self._all_encodings = all_encodings
-        self._encoding_names = encoding_names
-        self._tolerance = settings.tolerance
-        self._frame_scale = settings.frame_scale
-        self._has_targets = all_encodings is not None and len(all_encodings) > 0
+    backend = get_backend(name, settings=settings, use_gpu=gpu)
 
-        if not self._has_targets:
-            logger.warning(
-                "No target encodings loaded — detection will find faces but not identify them"
-            )
+    logger.info(
+        "Face backend '{}' — metric={}, dim={}, gpu={}",
+        backend.name,
+        backend.metric,
+        backend.dim,
+        backend._use_gpu,
+    )
+    return backend
 
-    def detect(
-        self,
-        frame: np.ndarray,
-        camera_id: str,
-        camera_name: str,
-    ) -> list[MatchEvent]:
-        """Run face detection and recognition on a single frame.
 
-        Args:
-            frame: BGR numpy array from OpenCV (full resolution).
-            camera_id: Camera identifier.
-            camera_name: Human-readable camera name.
+def FaceDetector(
+    all_encodings: np.ndarray | None,
+    encoding_names: list[str],
+    settings: Settings,
+    use_gpu: bool | None = None,
+) -> Backend:
+    """Build the configured backend and attach the target gallery.
 
-        Returns:
-            List of MatchEvent for each recognized face.
-        """
-        # Downscale for faster detection
-        scale = self._frame_scale
-        small = cv2.resize(frame, (0, 0), fx=scale, fy=scale)
-        rgb_small = cv2.cvtColor(small, cv2.COLOR_BGR2RGB)
+    Convenience wrapper over :func:`resolve_backend` that also attaches the
+    target gallery — equivalent to the old :class:`FaceDetector` class usage.
+    Prefer :func:`resolve_backend` + :meth:`Backend.set_gallery` when target
+    encodings must be computed with the same backend (as in main.py).
 
-        # All face_recognition calls under the lock
-        with _DETECTION_LOCK:
-            face_locations = face_recognition.face_locations(rgb_small, model="hog")
+    Args:
+        all_encodings: (N, D) array of all target encodings, or None.
+        encoding_names: List of target names, one per encoding row.
+        settings: Global settings.
+        use_gpu: Override ``settings.use_gpu`` if provided.
 
-            if not face_locations:
-                return []
-
-            face_encodings = face_recognition.face_encodings(rgb_small, face_locations)
-
-        if not self._has_targets or not face_encodings:
-            return []
-
-        # Match each detected face against known targets
-        now = datetime.now(timezone.utc)
-        matches: list[MatchEvent] = []
-        inv_scale = 1.0 / scale
-
-        for encoding, (top, right, bottom, left) in zip(face_encodings, face_locations):
-            distances = face_recognition.face_distance(self._all_encodings, encoding)
-            best_idx = np.argmin(distances)
-            best_distance = distances[best_idx]
-
-            if best_distance <= self._tolerance:
-                # Scale bbox back to original frame coordinates
-                orig_top = int(top * inv_scale)
-                orig_right = int(right * inv_scale)
-                orig_bottom = int(bottom * inv_scale)
-                orig_left = int(left * inv_scale)
-
-                matches.append(
-                    MatchEvent(
-                        target_name=self._encoding_names[best_idx],
-                        camera_id=camera_id,
-                        camera_name=camera_name,
-                        confidence=round(1.0 - best_distance, 3),
-                        timestamp=now,
-                        bbox=(orig_top, orig_right, orig_bottom, orig_left),
-                        frame=frame,
-                    )
-                )
-
-        return matches
+    Returns:
+        A backend ready for ``detect()``.
+    """
+    backend = resolve_backend(settings, use_gpu)
+    backend.set_gallery(all_encodings, encoding_names)
+    return backend

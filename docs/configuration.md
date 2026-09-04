@@ -37,12 +37,15 @@ All fields are optional. Omitting any field uses the default.
 | `screenshot_dir` | `string` | `"screenshots"` | — | Output directory for annotated match screenshots. Created automatically if missing. |
 | `log_dir` | `string` | `"logs"` | — | Output directory for structured JSON logs (`detections.json`). Created automatically. |
 | `cooldown` | `int` | `10` | — | Seconds before re-alerting the **same person on the same camera**. Prevents alert floods. |
+| `model_backend` | `string` | `"dlib_hog"` | see below | Face recognition backend: `dlib_hog`, `dlib_cnn`, `insightface`, or `facenet`. |
+| `use_gpu` | `bool` | `false` | — | Use GPU acceleration (InsightFace/FaceNet). Ignored by dlib backends. |
 
 **Validation rules** (enforced at load time via `Settings.__post_init__`):
 
 - `frame_scale` must be in `(0, 1]` — zero or negative values crash immediately
 - `tolerance` must be in `(0, 1]` — same constraint
 - `detection_interval` must be `> 0` — zero or negative values crash immediately
+- `model_backend` must be one of `dlib_hog`, `dlib_cnn`, `insightface`, `facenet`
 - Invalid values raise `ValueError` and Argus exits with code `1`
 
 **Full example:**
@@ -55,7 +58,15 @@ frame_scale = 0.25
 screenshot_dir = "screenshots"
 log_dir = "logs"
 cooldown = 10
+model_backend = "dlib_hog"
+use_gpu = false
 ```
+
+!!! note "Backend availability"
+    Only `dlib_hog` and `dlib_cnn` ship with the base install. `insightface` requires `pip install "argus[gpu]"`; `facenet` requires `pip install "argus[facenet]"`. Select an unavailable backend and Argus exits with a clear `pip install` hint. See [Detection](modules/detection.md) for the full backend reference.
+
+!!! note "Tolerance is backend-specific"
+    `tolerance = 0.6` is tuned for euclidean dlib distances. Cosine backends (`insightface`, `facenet`) need a lower threshold (`~0.3–0.4`).
 
 ### `[cameras.<id>]` — Camera Definitions
 
