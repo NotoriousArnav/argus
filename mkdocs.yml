@@ -1,0 +1,99 @@
+site_name: Argus
+site_description: Multi-camera RTSP surveillance with real-time face recognition
+site_author: Arnav Ghosh
+repo_url: https://github.com/NotoriousArnav/argus
+repo_name: NotoriousArnav/argus
+copyright: "© 2026 Arnav Ghosh & contributors — GPL-3.0"
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: slate
+      primary: deep orange
+      accent: red
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+    - scheme: default
+      primary: deep orange
+      accent: red
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - search.share
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    logo: material/eye
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Architecture: architecture.md
+  - Configuration: configuration.md
+  - CLI Reference: cli-reference.md
+  - Webhooks: webhooks.md
+  - Targets Guide: targets-guide.md
+  - Modules:
+      - modules/overview.md
+      - modules/models.md
+      - modules/config.md
+      - modules/stream.md
+      - modules/detection.md
+      - modules/alert.md
+      - modules/manager.md
+      - modules/display.md
+      - modules/targets.md
+  - Deployment: deployment.md
+  - Security: security.md
+  - Contributing: contributing.md
+  - FAQ: faq.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - def_list
+  - tables
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+plugins:
+  - search
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/NotoriousArnav

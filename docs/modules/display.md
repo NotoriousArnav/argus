@@ -1,3 +1,8 @@
+---
+title: Display
+description: GUI windows, detection overlays, and main-thread constraint
+---
+
 # Display
 
 See what Argus sees. One window per camera. Optional — headless doesn't need it.

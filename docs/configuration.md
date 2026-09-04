@@ -1,3 +1,8 @@
+---
+title: Configuration Reference
+description: Full reference for cameras.toml and webhooks.toml
+---
+
 # Configuration Reference
 
 Argus loads its configuration from TOML files in a single directory. Two files control behavior: `cameras.toml` for cameras and detection settings, `webhooks.toml` for notification endpoints.

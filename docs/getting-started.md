@@ -1,3 +1,8 @@
+---
+title: Getting Started
+description: Installation, configuration, first run, and verification
+---
+
 # Getting Started
 
 > *Point it at the cameras and walk away. It handles the rest.*

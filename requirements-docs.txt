@@ -1,0 +1,6 @@
+# MkDocs + Material for GitHub Pages documentation
+# Install: pip install -r docs/requirements.txt
+mkdocs-material>=9.5
+mkdocs>=1.6
+markdown>=3.6
+pymdown-extensions>=10.7

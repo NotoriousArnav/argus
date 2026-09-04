@@ -1,3 +1,8 @@
+---
+title: Alert
+description: Cooldowns, screenshots, webhooks, and loguru sinks
+---
+
 # Alert
 
 Match found. Log it. Screenshot it. Notify. Move on.

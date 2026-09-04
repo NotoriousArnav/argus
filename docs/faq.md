@@ -1,3 +1,8 @@
+---
+title: Frequently Asked Questions
+description: Common issues and solutions — connectivity, performance, false positives
+---
+
 # Frequently Asked Questions
 
 ---

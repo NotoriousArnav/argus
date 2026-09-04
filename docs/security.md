@@ -1,3 +1,8 @@
+---
+title: Security Considerations
+description: Camera hardening, deployment security, GPL-3.0 rationale, and privacy
+---
+
 # Security Considerations
 
 Argus exists to demonstrate a real threat: RTSP cameras left exposed on the open internet can be watched by anyone. This document covers how to secure both your cameras and your Argus deployment.

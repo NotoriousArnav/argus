@@ -1,3 +1,8 @@
+---
+title: Contributing to Argus
+description: Code style, architecture decisions, and development setup
+---
+
 # Contributing to Argus
 
 ---

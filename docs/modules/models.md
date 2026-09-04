@@ -1,3 +1,8 @@
+---
+title: Models
+description: Data classes — CameraConfig, Settings, MatchEvent, and more
+---
+
 # Models
 
 The data contract. Every module imports from here. Nothing else imports from anywhere else.

@@ -1,3 +1,8 @@
+---
+title: Stream
+description: Resilient per-camera RTSP reader with auto-reconnection
+---
+
 # Stream
 
 One thread per camera. The frame never stops flowing.

@@ -1,3 +1,8 @@
+---
+title: Targets
+description: Target loading, encoding computation, and index building
+---
+
 # Targets
 
 Point Argus at a face. It never forgets it.

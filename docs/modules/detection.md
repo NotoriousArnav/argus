@@ -1,3 +1,8 @@
+---
+title: Detection
+description: HOG face detection, 128-D encoding, and vectorized matching
+---
+
 # Detection
 
 Face recognition at the speed of surveillance. Every frame, every camera, no exceptions.

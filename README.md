@@ -11,7 +11,12 @@
 > *"There won't always be a Batman to save you,*
 > *but an Oracle will be there to watch you."*
 
-[Documentation](./docs/index.md)
+[Documentation](./docs/index.md) — rendered with **MkDocs Material** at [argus docs](https://notoriousarnav.github.io/argus/). To preview locally:
+
+```bash
+pip install -r requirements-docs.txt
+mkdocs serve
+```
 
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-red.svg)
 ![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)

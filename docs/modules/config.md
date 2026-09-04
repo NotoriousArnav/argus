@@ -1,3 +1,8 @@
+---
+title: Config Loading
+description: TOML parsing, validation chain, and error handling
+---
+
 # Configuration
 
 Two TOML files. One function each. Fail loud, fail fast.

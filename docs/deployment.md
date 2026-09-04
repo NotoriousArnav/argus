@@ -1,3 +1,8 @@
+---
+title: Deployment Guide
+description: systemd, Docker, resource requirements, and scaling
+---
+
 # Deployment Guide
 
 Argus runs headless. No screen, no keyboard, no human in the loop. This is how you deploy it that way.

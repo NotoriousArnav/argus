@@ -1,3 +1,8 @@
+---
+title: Manager
+description: Orchestration, main loop, and signal handling
+---
+
 # Manager
 
 The brain stem. Orchestrates every component. Runs the main loop. Owns the process.

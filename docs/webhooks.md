@@ -1,3 +1,8 @@
+---
+title: Webhooks
+description: Template system, placeholders, HTTP behavior, and service examples
+---
+
 # Webhooks
 
 ## How It Works

@@ -1,3 +1,8 @@
+---
+title: Module Overview
+description: Dependency graph, responsibilities, and thread ownership
+---
+
 # Module Overview
 
 Argus is nine modules and one entry point. Each owns a single responsibility. The data flows one direction — frames in, alerts out.

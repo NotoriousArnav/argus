@@ -1,3 +1,8 @@
+---
+title: Targets Management
+description: Adding targets, image requirements, encoding process, and troubleshooting
+---
+
 # Targets Management Guide
 
 Argus identifies people by comparing detected faces against a database of pre-computed **face encodings**. Each person you want to track is a **target** — a directory containing reference images and a manifest.

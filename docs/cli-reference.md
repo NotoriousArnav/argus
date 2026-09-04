@@ -1,3 +1,8 @@
+---
+title: CLI Reference
+description: Command-line flags, usage examples, and exit behavior
+---
+
 # CLI Reference
 
 ## Program

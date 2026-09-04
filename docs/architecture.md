@@ -1,3 +1,8 @@
+---
+title: Architecture
+description: Threading model, data flow, synchronization, and design decisions
+---
+
 # Architecture
 
 > *"He was the best and greatest of giants... he had a hundred eyes, and, wonderful to say, he had them all open."* — Ovid, Metamorphoses

@@ -1,0 +1,66 @@
+/* Argus documentation theme overrides
+   Keeps the dark, mythic, "all-seeing" aesthetic on top of Material.
+   GPL-3.0 — same license as the project. */
+
+/* --- Typography --- */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* --- The banner / logo --- */
+.md-header__title {
+  font-weight: 700;
+}
+
+/* --- Admonishments --- */
+.md-typeset .admonition,
+.md-typeset details {
+  border-left-width: 4px;
+}
+
+/* --- Code blocks: camera-green one-liners --- */
+.md-typeset .highlight {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.25rem;
+}
+
+/* --- Tables --- */
+.md-typeset table:not([class]) th {
+  font-weight: 700;
+  background-color: var(--md-primary-fg-color--dark);
+}
+
+/* --- Bounding-box accent for callouts and quotes --- */
+blockquote {
+  border-left: 4px solid var(--md-primary-fg-color);
+}
+
+/* --- "Shadow-user" emphasis used across the docs --- */
+strong {
+  font-weight: 700;
+}
+
+em {
+  font-style: italic;
+}
+
+/* --- Keep the bbox-green (0,255,0) as the accent deep-links --- */
+.md-ellipsis {
+  font-variant-numeric: lining-nums;
+}
+
+/* Ensure the eye logo never gets clipped */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+/* Slightly larger content width for tables and diagrams */
+.md-grid {
+  max-width: 1440px;
+}

@@ -1,3 +1,9 @@
+---
+title: Argus
+description: Multi-camera RTSP surveillance with real-time face recognition — the all-seeing system
+---
+# Argus
+
 ```
      _
     / \   _ __ __ _ _   _ ___
@@ -142,7 +148,7 @@ GPL-3.0 ensures that:
 - **Patent protection.** Contributors grant patent rights. No patent ambushes.
 - **Shadow-users are protected.** The people being watched never consented to surveillance. GPL-3.0 guarantees they can study the tool being used against them — something impossible with proprietary software.
 
-See [LICENSE](../LICENSE) for the full license text. See [Security — Why GPL-3.0](security.md#why-gpl-30-and-not-mit-or-apache) for the full rationale.
+See [LICENSE](https://github.com/NotoriousArnav/argus/blob/master/LICENSE) for the full license text. See [Security — Why GPL-3.0](security.md#why-gpl-30-and-not-mit-or-apache) for the full rationale.
 
 ---
 
